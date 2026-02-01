@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Capstone Project Code Sharing Tool</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h2>Capstone Project Code Sharing Tool</h2>
+  <button onclick="logout()">Logout</button>
+</header>
+
+<!-- BUTTON TO SHOW ADD TEXT FORM -->
+<button id="showAddBtn" class="show-add-btn">➕ Add Code</button>
+
+<!-- USER ADD SECTION -->
+<section id="addSection" class="card">
+  <h3>Add Content to share with your Teammates:</h3>
+  <input id="title" placeholder="Add a File name to share with your teammates">
+  <textarea id="body" placeholder="Add the code here to save"></textarea>
+  <button onclick="addText()">Add Code</button>
+</section>
+
+<!-- TEXT LIST -->
+<section id="list"></section>
+
+<!-- MODAL -->
+<div id="modal" class="modal" onclick="closeModal(event)">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">×</span>
+    <pre id="modalText"></pre>
+    <button onclick="copyText()">📋 Copy Content</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

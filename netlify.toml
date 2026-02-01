@@ -1,0 +1,12 @@
+[build]
+  # The folder that contains your HTML, CSS, JS
+  publish = "public"
+  
+  # Where your serverless functions are located
+  functions = "netlify/functions"
+
+# Redirect all unmatched URLs to index.html (optional, useful for SPA)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

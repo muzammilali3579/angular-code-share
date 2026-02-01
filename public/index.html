@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login | Capstone Project Code Sharing Tool</title>
+  <style>
+/* Reset default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Body with bold gradient background */
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+}
+
+/* Animate background gradient */
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Login card container */
+.login-card {
+  background: #ffffff;
+  padding: 40px 50px;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  width: 350px;
+  text-align: center;
+  animation: slideUp 1s ease forwards;
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+/* Card entrance animation */
+@keyframes slideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Card heading */
+.login-card h2 {
+  font-size: 26px;
+  color: #333;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+/* Input styling */
+.login-card input {
+  width: 100%;
+  padding: 14px 15px;
+  margin: 12px 0;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+/* Input focus */
+.login-card input:focus {
+  border-color: #4facfe;
+  box-shadow: 0 0 10px rgba(79, 172, 254, 0.5);
+  outline: none;
+  transform: scale(1.02);
+}
+
+/* Button styling */
+.login-card button {
+  width: 100%;
+  padding: 14px 0;
+  margin-top: 20px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(45deg, #4facfe, #00f2fe);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4);
+}
+
+/* Button hover effect */
+.login-card button:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 25px rgba(79, 172, 254, 0.6);
+}
+
+/* Error message */
+.login-card .error {
+  color: #ff4d4d;
+  font-size: 14px;
+  margin-top: 12px;
+  min-height: 18px;
+}
+
+  </style>
+</head>
+<body class="center">
+
+  <div class="login-card card">
+    <h2>Angular Capstone Project Code Sharing Platform</h2>
+
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+
+    <button onclick="login()">Login</button>
+
+    <p id="error" class="error"></p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
