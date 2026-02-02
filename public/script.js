@@ -1,4 +1,4 @@
-/* ===================== USERS ===================== */
+/* ===================== USERS (FRONTEND ONLY DEMO) ===================== */
 const USERS = {
     angular: { password: "angular", role: "user" },
     admin: { password: "#Ali10037", role: "admin" }
@@ -32,16 +32,16 @@ if (window.location.pathname.includes("dashboard") && !role) {
 /* ===================== DATA STORAGE ===================== */
 let texts = [];
 
-/* ===================== FETCH TEXTS FROM SERVER ===================== */
+/* ===================== FETCH TEXTS ===================== */
 async function fetchTexts() {
     try {
-        const res = await fetch("/.netlify/functions/getTexts");
+        const res = await fetch("/api/texts");
         if (!res.ok) throw new Error("Failed to fetch texts");
         texts = await res.json();
         render();
     } catch (err) {
         console.error(err);
-        alert("Could not load texts from server");
+        alert("Could not load texts");
     }
 }
 
@@ -51,41 +51,54 @@ async function addText() {
 
     const titleInput = document.getElementById("title");
     const bodyInput = document.getElementById("body");
-    const newTitle = titleInput.value.trim();
-    const newBody = bodyInput.value.trim();
 
-    if (!newTitle || !newBody) {
+    const title = titleInput.value.trim();
+    const body = bodyInput.value.trim();
+
+    if (!title || !body) {
         alert("Title and body cannot be empty");
         return;
     }
 
     try {
-        const res = await fetch("/.netlify/functions/addText", {
+        const res = await fetch("/api/texts", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title: newTitle, body: newBody })
+            body: JSON.stringify({ title, body })
         });
 
-        const data = await res.json();
+        if (!res.ok) throw new Error("Failed to add");
 
-        if (!res.ok) {
-            alert(data.error || "Failed to add text");
-            return;
-        }
-
-        texts = data.texts; // update local array
+        const added = await res.json();
+        texts.push(added);
         render();
 
         titleInput.value = "";
         bodyInput.value = "";
-
-        if (addSection && showAddBtn) {
-            addSection.style.display = "none";
-            showAddBtn.textContent = "➕ Add Code";
-        }
     } catch (err) {
         console.error(err);
         alert("Failed to add text");
+    }
+}
+
+/* ===================== DELETE TEXT (ADMIN) ===================== */
+async function deleteText(id) {
+    if (role !== "admin") return;
+
+    if (!confirm("Are you sure you want to delete this item?")) return;
+
+    try {
+        const res = await fetch(`/api/texts?id=${id}`, {
+            method: "DELETE"
+        });
+
+        if (!res.ok) throw new Error("Delete failed");
+
+        texts = texts.filter(t => t.id !== id);
+        render();
+    } catch (err) {
+        console.error(err);
+        alert("Failed to delete text");
     }
 }
 
@@ -93,19 +106,17 @@ async function addText() {
 function render() {
     const list = document.getElementById("list");
     if (!list) return;
+
     list.innerHTML = "";
 
-    const addSection = document.getElementById("addSection");
-    if (addSection) addSection.style.display = "none";
-
-    texts.forEach((item, index) => {
+    texts.forEach(item => {
         const div = document.createElement("div");
         div.className = "text-item";
 
         const heading = document.createElement("h4");
         heading.textContent = item.title;
         heading.onclick = () => {
-            if (item.body && item.body.trim() !== "") openModal(item.body);
+            if (item.body) openModal(item.body);
             else alert("No content to display!");
         };
         div.appendChild(heading);
@@ -124,33 +135,8 @@ function render() {
                 cursor: pointer;
                 margin-left: 15px;
             `;
-            delBtn.onmouseover = () => {
-                delBtn.style.backgroundColor = "#ff1a1a";
-                delBtn.style.transform = "scale(1.1)";
-            };
-            delBtn.onmouseout = () => {
-                delBtn.style.backgroundColor = "#ff4d4d";
-                delBtn.style.transform = "scale(1)";
-            };
-            delBtn.onclick = async () => {
-                if (!confirm("Are you sure you want to delete this item?")) return;
 
-                try {
-                    // Send delete request to function
-                    const res = await fetch("/.netlify/functions/deleteText", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ index })
-                    });
-                    const data = await res.json();
-                    if (!res.ok) throw new Error(data.error || "Delete failed");
-                    texts = data.texts;
-                    render();
-                } catch (err) {
-                    console.error(err);
-                    alert("Failed to delete text");
-                }
-            };
+            delBtn.onclick = () => deleteText(item.id);
             div.appendChild(delBtn);
         }
 
@@ -184,18 +170,22 @@ function copyText() {
     alert("Copied to clipboard!");
 }
 
-/* ===================== SHOW/HIDE ADD SECTION ===================== */
+/* ===================== SHOW / HIDE ADD SECTION ===================== */
 document.addEventListener("DOMContentLoaded", () => {
-    if (window.location.pathname.includes("dashboard")) fetchTexts();
+    if (window.location.pathname.includes("dashboard")) {
+        fetchTexts();
+    }
 
     const showAddBtn = document.getElementById("showAddBtn");
     const addSection = document.getElementById("addSection");
 
+    if (!showAddBtn || !addSection) return;
+
     if (role === "user") {
         showAddBtn.style.display = "block";
         addSection.style.display = "none";
-        let isOpen = false;
 
+        let isOpen = false;
         showAddBtn.addEventListener("click", () => {
             isOpen = !isOpen;
             addSection.style.display = isOpen ? "block" : "none";
