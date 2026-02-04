@@ -1,6 +1,6 @@
 /* ===================== USERS (FRONTEND ONLY DEMO) ===================== */
 const USERS = {
-    angular: { password: "angular", role: "user" },
+    user: { password: "user", role: "user" },
     admin: { password: "#Ali10037", role: "admin" }
 };
 
