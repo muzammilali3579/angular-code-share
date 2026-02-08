@@ -1,7 +1,7 @@
 /* ===================== USERS (FRONTEND ONLY DEMO) ===================== */
 const USERS = {
     user: { password: "user", role: "user" },
-    admin: { password: "#Ali10037", role: "admin" }
+    admin: { password: "admin", role: "admin" }
 };
 
 /* ===================== AUTH ===================== */
